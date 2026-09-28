@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>AI Evaluation | Examination OSM</title>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f4f7fb;
+        color: #1f2937;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 1100px;
+        margin: 40px auto;
+    }
+
+    .header {
+        background: linear-gradient(135deg, #111827, #2563eb);
+        color: white;
+        padding: 30px;
+        border-radius: 16px;
+        margin-bottom: 25px;
+    }
+
+    .header h1 {
+        margin: 0 0 10px;
+        font-size: 30px;
+    }
+
+    .header p {
+        margin: 0;
+        opacity: 0.9;
+    }
+
+    .card {
+        background: white;
+        border-radius: 16px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .card h2 {
+        margin-top: 0;
+        color: #111827;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 7px;
+    }
+
+    input,
+    textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 15px;
+        outline: none;
+    }
+
+    input:focus,
+    textarea:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    textarea {
+        min-height: 130px;
+        resize: vertical;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    button {
+        border: none;
+        background: #2563eb;
+        color: white;
+        padding: 13px 25px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #1d4ed8;
+    }
+
+    button:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+    }
+
+    .loading {
+        display: none;
+        margin-top: 15px;
+        color: #2563eb;
+        font-weight: 600;
+    }
+
+    .error {
+        display: none;
+        margin-top: 20px;
+        padding: 15px;
+        background: #fee2e2;
+        color: #991b1b;
+        border-radius: 8px;
+    }
+
+    .success {
+        display: none;
+        margin-top: 20px;
+        padding: 15px;
+        background: #dcfce7;
+        color: #166534;
+        border-radius: 8px;
+    }
+
+    .result-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .score-box {
+        padding: 20px;
+        background: #f8fafc;
+        border-radius: 10px;
+        text-align: center;
+        border: 1px solid #e5e7eb;
+    }
+
+    .score-box h3 {
+        margin: 0;
+        font-size: 14px;
+        color: #6b7280;
+    }
+
+    .score {
+        margin-top: 8px;
+        font-size: 25px;
+        font-weight: bold;
+        color: #2563eb;
+    }
+
+    .feedback-box {
+        margin-top: 20px;
+        padding: 20px;
+        background: #eff6ff;
+        border-left: 5px solid #2563eb;
+        border-radius: 8px;
+    }
+
+    .anomaly-box {
+        margin-top: 20px;
+        padding: 20px;
+        background: #fff7ed;
+        border-left: 5px solid #f97316;
+        border-radius: 8px;
+    }
+
+    @media (max-width: 768px) {
+        .grid,
+        .result-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .container {
+            width: 95%;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<div class="container">
+
+```
+<div class="header">
+    <h1>AI-Driven Examination & On-Screen Marking</h1>
+    <p>
+        AI-powered answer evaluation, automated marking,
+        feedback and anomaly detection.
+    </p>
+</div>
+
+<div class="card">
+
+    <h2>Answer Evaluation</h2>
+
+    <form id="evaluationForm">
+
+        <div class="grid">
+
+            <div class="form-group">
+                <label for="studentId">
+                    Student ID
+                </label>
+
+                <input
+                    type="text"
+                    id="studentId"
+                    placeholder="Enter student ID"
+                    value="demo-student"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="maxMarks">
+                    Maximum Marks
+                </label>
+
+                <input
+                    type="number"
+                    id="maxMarks"
+                    value="10"
+                    min="1"
+                    step="0.5"
+                    required
+                >
+            </div>
+
+        </div>
+
+        <div class="form-group">
+
+            <label for="question">
+                Question
+            </label>
+
+            <textarea
+                id="question"
+                placeholder="Enter examination question..."
+                required
+            ></textarea>
+
+        </div>
+
+        <div class="form-group">
+
+            <label for="expectedAnswer">
+                Expected / Model Answer
+            </label>
+
+            <textarea
+                id="expectedAnswer"
+                placeholder="Enter the expected/model answer..."
+                required
+            ></textarea>
+
+        </div>
+
+        <div class="form-group">
+
+            <label for="studentAnswer">
+                Student Answer
+            </label>
+
+            <textarea
+                id="studentAnswer"
+                placeholder="Enter student's answer..."
+                required
+            ></textarea>
+
+        </div>
+
+        <div class="form-group">
+
+            <label for="rubric">
+                Rubric / Evaluation Criteria
+            </label>
+
+            <textarea
+                id="rubric"
+                placeholder="Example: definition, key concepts, examples, conclusion..."
+            ></textarea>
+
+        </div>
+
+        <button
+            type="submit"
+            id="evaluateBtn"
+        >
+            Evaluate Answer
+        </button>
+
+        <div
+            class="loading"
+            id="loading"
+        >
+            AI is evaluating the answer...
+        </div>
+
+        <div
+            class="error"
+            id="errorBox"
+        ></div>
+
+        <div
+            class="success"
+            id="successBox"
+        ></div>
+
+    </form>
+
+</div>
+
+
+<div
+    class="card"
+    id="resultCard"
+    style="display:none;"
+>
+
+    <h2>Evaluation Result</h2>
+
+    <div class="result-grid">
+
+        <div class="score-box">
+            <h3>Semantic Score</h3>
+            <div
+                class="score"
+                id="semanticScore"
+            >
+                0%
+            </div>
+        </div>
+
+        <div class="score-box">
+            <h3>Keyword Score</h3>
+            <div
+                class="score"
+                id="keywordScore"
+            >
+                0%
+            </div>
+        </div>
+
+        <div class="score-box">
+            <h3>Concept Score</h3>
+            <div
+                class="score"
+                id="conceptScore"
+            >
+                0%
+            </div>
+        </div>
+
+        <div class="score-box">
+            <h3>Overall Score</h3>
+            <div
+                class="score"
+                id="overallScore"
+            >
+                0%
+            </div>
+        </div>
+
+    </div>
+
+    <div class="feedback-box">
+
+        <h3>Marks</h3>
+
+        <p>
+            <strong>Marks Obtained:</strong>
+
+            <span id="marksObtained">
+                0
+            </span>
+
+            /
+
+            <span id="maxMarksResult">
+                0
+            </span>
+        </p>
+
+    </div>
+
+    <div class="feedback-box">
+
+        <h3>AI Feedback</h3>
+
+        <p id="feedbackText">
+            -
+        </p>
+
+    </div>
+
+    <div class="anomaly-box">
+
+        <h3>Anomaly Detection</h3>
+
+        <p id="anomalyText">
+            -
+        </p>
+
+    </div>
+
+</div>
+```
+
+</div>
+
+<script>
+
+const form = document.getElementById("evaluationForm");
+
+const evaluateBtn =
+    document.getElementById("evaluateBtn");
+
+const loading =
+    document.getElementById("loading");
+
+const errorBox =
+    document.getElementById("errorBox");
+
+const successBox =
+    document.getElementById("successBox");
+
+const resultCard =
+    document.getElementById("resultCard");
+
+
+form.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    errorBox.style.display = "none";
+    successBox.style.display = "none";
+    resultCard.style.display = "none";
+
+    evaluateBtn.disabled = true;
+    loading.style.display = "block";
+
+
+    const studentId =
+        document.getElementById("studentId")
+        .value
+        .trim();
+
+    const question =
+        document.getElementById("question")
+        .value
+        .trim();
+
+    const expectedAnswer =
+        document.getElementById("expectedAnswer")
+        .value
+        .trim();
+
+    const studentAnswer =
+        document.getElementById("studentAnswer")
+        .value
+        .trim();
+
+    const rubric =
+        document.getElementById("rubric")
+        .value
+        .trim();
+
+    const maxMarks =
+        document.getElementById("maxMarks")
+        .value;
+
+
+    /*
+     * IMPORTANT
+     *
+     * Flask backend route:
+     *
+     * POST /api/evaluation/evaluate
+     *
+     * Do NOT change this URL to:
+     * /api/evaluate
+     */
+
+    const API_URL =
+        "/api/evaluation/evaluate";
+
+
+    const payload = {
+
+        student_id:
+            studentId || "demo-student",
+
+        question:
+            question,
+
+        expected_answer:
+            expectedAnswer,
+
+        student_answer:
+            studentAnswer,
+
+        rubric:
+            rubric,
+
+        max_marks:
+            Number(maxMarks)
+
+    };
+
+
+    try {
+
+        const response =
+            await fetch(
+                API_URL,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+                        "Accept":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(payload)
+                }
+            );
+
+
+        let data;
+
+        try {
+
+            data =
+                await response.json();
+
+        } catch (jsonError) {
+
+            throw new Error(
+                "Server returned an invalid response. HTTP status: " +
+                response.status
+            );
+        }
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                data.message ||
+                "Evaluation failed. HTTP status: " +
+                response.status
+            );
+        }
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.error ||
+                data.message ||
+                "Evaluation failed."
+            );
+        }
+
+
+        displayResult(data);
+
+
+        successBox.textContent =
+            "Answer evaluated successfully.";
+
+        successBox.style.display =
+            "block";
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Evaluation Error:",
+            error
+        );
+
+        errorBox.textContent =
+            "Evaluation failed: " +
+            error.message;
+
+        errorBox.style.display =
+            "block";
+
+    }
+
+    finally {
+
+        loading.style.display =
+            "none";
+
+        evaluateBtn.disabled =
+            false;
+    }
+
+});
+
+
+function displayResult(data) {
+
+    const scores =
+        data.scores || {};
+
+
+    document.getElementById(
+        "semanticScore"
+    ).textContent =
+        Number(
+            scores.semantic_score || 0
+        ).toFixed(2) + "%";
+
+
+    document.getElementById(
+        "keywordScore"
+    ).textContent =
+        Number(
+            scores.keyword_score || 0
+        ).toFixed(2) + "%";
+
+
+    document.getElementById(
+        "conceptScore"
+    ).textContent =
+        Number(
+            scores.concept_score || 0
+        ).toFixed(2) + "%";
+
+
+    document.getElementById(
+        "overallScore"
+    ).textContent =
+        Number(
+            scores.overall_score || 0
+        ).toFixed(2) + "%";
+
+
+    document.getElementById(
+        "marksObtained"
+    ).textContent =
+        Number(
+            data.marks || 0
+        ).toFixed(2);
+
+
+    document.getElementById(
+        "maxMarksResult"
+    ).textContent =
+        Number(
+            data.max_marks || 0
+        ).toFixed(2);
+
+
+    const feedback =
+        data.feedback;
+
+
+    if (
+        feedback !== null &&
+        typeof feedback === "object"
+    ) {
+
+        document.getElementById(
+            "feedbackText"
+        ).textContent =
+            feedback.message ||
+            feedback.feedback ||
+            JSON.stringify(feedback);
+
+    } else {
+
+        document.getElementById(
+            "feedbackText"
+        ).textContent =
+            feedback ||
+            "No feedback available.";
+
+    }
+
+
+    const anomaly =
+        data.anomaly;
+
+
+    if (
+        anomaly !== null &&
+        typeof anomaly === "object"
+    ) {
+
+        if (anomaly.detected) {
+
+            document.getElementById(
+                "anomalyText"
+            ).textContent =
+                "Anomaly detected: " +
+                (
+                    anomaly.message ||
+                    "Potential anomaly found."
+                );
+
+        } else {
+
+            document.getElementById(
+                "anomalyText"
+            ).textContent =
+                anomaly.message ||
+                "No anomaly detected.";
+
+        }
+
+    } else {
+
+        document.getElementById(
+            "anomalyText"
+        ).textContent =
+            anomaly ||
+            "No anomaly information available.";
+
+    }
+
+
+    resultCard.style.display =
+        "block";
+
+
+    resultCard.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
+}
+
+</script>
+
+</body>
+</html>

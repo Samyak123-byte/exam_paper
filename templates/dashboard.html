@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        ExamAI | Evaluation Workspace
+    </title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+</head>
+
+<body class="app-body">
+
+
+<div class="app-layout">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+                ✦
+            </div>
+
+            <div>
+
+                <strong>
+                    ExamAI
+                </strong>
+
+                <small>
+                    OSM Platform
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="menu-label">
+            WORKSPACE
+        </div>
+
+
+        <a class="sidebar-link active"
+           href="/dashboard">
+
+            <span>▦</span>
+
+            Dashboard
+
+        </a>
+
+
+        <a class="sidebar-link"
+           href="/upload">
+
+            <span>↑</span>
+
+            Upload Scripts
+
+        </a>
+
+
+        <a class="sidebar-link"
+           href="/evaluation">
+
+            <span>✦</span>
+
+            AI Evaluation
+
+        </a>
+
+
+        <div class="menu-label">
+            MANAGEMENT
+        </div>
+
+
+        <a class="sidebar-link">
+
+            <span>▤</span>
+
+            Examinations
+
+        </a>
+
+
+        <a class="sidebar-link">
+
+            <span>◫</span>
+
+            Analytics
+
+        </a>
+
+
+        <a class="sidebar-link">
+
+            <span>⚙</span>
+
+            Settings
+
+        </a>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="ai-status">
+
+                <span class="status-dot"></span>
+
+                <div>
+
+                    <strong>
+                        AI Engine
+                    </strong>
+
+                    <small>
+                        Online
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main-content">
+
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>
+                    Evaluation Dashboard
+                </h1>
+
+                <p>
+                    AI-powered examination evaluation workspace
+                </p>
+
+            </div>
+
+
+            <div class="examiner">
+
+                <div class="avatar">
+                    EX
+                </div>
+
+                <div>
+
+                    <strong>
+                        Examiner
+                    </strong>
+
+                    <small>
+                        Administrator
+                    </small>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- STAT CARDS -->
+
+        <section class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon purple">
+                    ◫
+                </div>
+
+                <div>
+
+                    <span>
+                        Answer Scripts
+                    </span>
+
+                    <strong>
+                        124
+                    </strong>
+
+                    <small class="positive">
+                        ↑ 12% this week
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon blue">
+                    ✓
+                </div>
+
+                <div>
+
+                    <span>
+                        Evaluated
+                    </span>
+
+                    <strong>
+                        87
+                    </strong>
+
+                    <small class="positive">
+                        ↑ 18 today
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon green">
+                    %
+                </div>
+
+                <div>
+
+                    <span>
+                        Avg. Score
+                    </span>
+
+                    <strong>
+                        76.4%
+                    </strong>
+
+                    <small>
+                        Across evaluations
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon orange">
+                    !
+                </div>
+
+                <div>
+
+                    <span>
+                        Review Required
+                    </span>
+
+                    <strong>
+                        09
+                    </strong>
+
+                    <small class="warning">
+                        Needs attention
+                    </small>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- EVALUATION PANEL -->
+
+        <section class="evaluation-panel">
+
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        AI EVALUATION
+                    </span>
+
+                    <h2>
+                        Evaluate Student Answer
+                    </h2>
+
+                    <p>
+                        Compare the student's response with
+                        the expected answer using AI.
+                    </p>
+
+                </div>
+
+
+                <div class="ai-badge">
+
+                    <span class="status-dot"></span>
+
+                    AI Ready
+
+                </div>
+
+            </div>
+
+
+            <div class="form-grid">
+
+
+                <div class="full">
+
+                    <label>
+                        Question
+                    </label>
+
+                    <textarea
+                        id="question"
+                        placeholder="Enter examination question..."
+                    ></textarea>
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Expected Answer
+                    </label>
+
+                    <textarea
+                        id="expected"
+                        placeholder="Enter model / reference answer..."
+                    ></textarea>
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Student Answer
+                    </label>
+
+                    <textarea
+                        id="student"
+                        placeholder="Enter student's answer..."
+                    ></textarea>
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Maximum Marks
+                    </label>
+
+                    <input
+                        id="marks"
+                        type="number"
+                        value="5"
+                        min="1"
+                        max="100"
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Student ID
+                    </label>
+
+                    <input
+                        id="studentId"
+                        value="STU-001"
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <div class="evaluate-action">
+
+                <button
+                    class="evaluate-btn"
+                    onclick="evaluateAnswer()"
+                >
+
+                    ✦ Evaluate with AI
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- RESULT -->
+
+        <section
+            class="result-panel"
+            id="resultPanel"
+        >
+
+            <div class="result-placeholder">
+
+                <div class="placeholder-icon">
+                    ✦
+                </div>
+
+                <h3>
+                    AI Evaluation Result
+                </h3>
+
+                <p>
+                    Submit an answer to see semantic
+                    analysis, concept coverage and
+                    automatic marks.
+                </p>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+<script
+    src="{{ url_for('static', filename='js/dashboard.js') }}"
+></script>
+
+</body>
+
+</html>

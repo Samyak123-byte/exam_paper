@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>
+        Student Results
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static',
+        filename='css/style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>
+        Examination Result
+    </h1>
+
+    <div class="card">
+
+        <h2>
+            Student:
+            {{ student_id }}
+        </h2>
+
+        <div id="result">
+            Loading...
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+async function loadResult() {
+
+    const response =
+        await fetch(
+            "/api/result/{{ student_id }}"
+        );
+
+    const data =
+        await response.json();
+
+
+    let html = `
+
+        <h2>
+            Total:
+            ${data.total_marks}
+            /
+            ${data.maximum_marks}
+        </h2>
+
+        <h2>
+            Percentage:
+            ${data.percentage}%
+        </h2>
+
+    `;
+
+
+    data.results.forEach(
+        item => {
+
+            html += `
+
+                <div class="result-item">
+
+                    <h3>
+                        ${item.question_text || "Question"}
+                    </h3>
+
+                    <p>
+                        Marks:
+                        ${item.marks}
+                        /
+                        ${item.max_marks}
+                    </p>
+
+                    <p>
+                        ${item.feedback}
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    document.getElementById(
+        "result"
+    ).innerHTML = html;
+}
+
+
+loadResult();
+
+</script>
+
+</body>
+
+</html>

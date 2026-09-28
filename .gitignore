@@ -1,0 +1,13 @@
+venv/
+.venv/
+env/
+ENV/
+
+.env
+instance/
+
+__pycache__/
+*.py[cod]
+
+uploads/*
+!uploads/.gitkeep
